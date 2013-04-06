@@ -14,6 +14,8 @@
 
 @implementation MSPSettingViewController
 
+@synthesize userSettings;
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -27,33 +29,35 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //TODO load from data
+    userSettings = [NSMutableDictionary dictionary];
+    
+    //FIXIT created dummy data
+    [userSettings setObject:@"青森市" forKey:@"AOMORI"];
+    [userSettings setObject:@"盛岡市" forKey:@"IWATE"];
+    [userSettings setObject:@"仙台市" forKey:@"MIYAGI"];
+    [userSettings setObject:@"秋田市" forKey:@"AKITA"];
+    [userSettings setObject:@"山形市" forKey:@"YAMAGATA"];
+    [userSettings setObject:@"福島市" forKey:@"FUKUSHIMA"];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    //TODO 項目数増加に伴い項目カテゴリの追加を要検討
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    //TODO 項目数増加に伴い項目カテゴリ発生時は、動的な物に変更する
+    return [userSettings count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -62,6 +66,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
+    cell.textLabel.text = [userSettings objectForKey:@"IWATE"];
     
     return cell;
 }

@@ -10,4 +10,7 @@
 
 @interface MSPSettingViewController : UITableViewController
 
+// 設定項目一覧
+@property (strong) NSMutableDictionary *userSettings;
+
 @end
