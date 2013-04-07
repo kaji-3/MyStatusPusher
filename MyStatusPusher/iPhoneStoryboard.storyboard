@@ -15,8 +15,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="LYN-Rd-aQy" kind="relationship" relationship="viewControllers" id="8Hp-iu-yXl"/>
-                        <segue destination="ZdS-jp-Jb6" kind="relationship" relationship="viewControllers" id="83c-HP-Fyw"/>
+                        <segue destination="7GY-LZ-vgi" kind="relationship" relationship="viewControllers" id="Fot-lW-MvZ"/>
+                        <segue destination="ZdS-jp-Jb6" kind="relationship" relationship="viewControllers" id="qxG-7b-RF9"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HAn-lg-3G8" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -24,34 +24,18 @@
             <point key="canvasLocation" x="-24" y="74"/>
         </scene>
         <!--Pusher View Controller - Pusher-->
-        <scene sceneID="2s2-X1-rZj">
+        <scene sceneID="f4O-N8-ISX">
             <objects>
-                <tableViewController id="LYN-Rd-aQy" customClass="MSPPusherViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="qgC-9u-P1s">
+                <viewController id="7GY-LZ-vgi" customClass="MSPPusherViewController" sceneMemberID="viewController">
+                    <mapView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="BTo-dy-l8d">
                         <rect key="frame" x="0.0" y="20" width="320" height="499"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="n3z-U9-Hcw">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                            </tableViewCell>
-                        </prototypes>
-                        <connections>
-                            <outlet property="dataSource" destination="LYN-Rd-aQy" id="fc2-bR-z0I"/>
-                            <outlet property="delegate" destination="LYN-Rd-aQy" id="tI2-1k-fK0"/>
-                        </connections>
-                    </tableView>
-                    <tabBarItem key="tabBarItem" title="Pusher" image="Symbols_Play_32xLG.png" id="fWh-4Z-m39"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LOH-mt-XfU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                    </mapView>
+                    <tabBarItem key="tabBarItem" title="Pusher" image="Symbols_Play_32xLG.png" id="hT5-O4-7Z9"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="136-pD-Hf9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="474" y="-311"/>
+            <point key="canvasLocation" x="510" y="-354"/>
         </scene>
         <!--Setting View Controller - Setting-->
         <scene sceneID="tFV-gn-fHU">
@@ -88,14 +72,6 @@
         <image name="Symbols_Play_32xLG.png" width="32" height="32"/>
         <image name="gear_32xLG.png" width="32" height="32"/>
     </resources>
-    <classes>
-        <class className="MSPPusherViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MSPPusherViewController.h"/>
-        </class>
-        <class className="MSPSettingViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MSPSettingViewController.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

@@ -11,7 +11,9 @@
 		C771C2CF170F3908003E661A /* gear_32xLG.png in Resources */ = {isa = PBXBuildFile; fileRef = C771C2CD170F3908003E661A /* gear_32xLG.png */; };
 		C771C2D0170F3908003E661A /* Symbols_Play_32xLG.png in Resources */ = {isa = PBXBuildFile; fileRef = C771C2CE170F3908003E661A /* Symbols_Play_32xLG.png */; };
 		C771C2D4170F3FE4003E661A /* MSPSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C771C2D3170F3FE4003E661A /* MSPSettingViewController.m */; };
-		C771C2D7170FD97E003E661A /* MSPPusherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C771C2D6170FD97E003E661A /* MSPPusherViewController.m */; };
+		C78878C8171086EB0019DEC3 /* MSPPusherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C78878C7171086EB0019DEC3 /* MSPPusherViewController.m */; };
+		C78878CA171088230019DEC3 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78878C9171088230019DEC3 /* MapKit.framework */; };
+		C78878CC1710882C0019DEC3 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C78878CB1710882C0019DEC3 /* CoreLocation.framework */; };
 		C7FE16BF170DD8DA00432F38 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7FE16BE170DD8DA00432F38 /* UIKit.framework */; };
 		C7FE16C1170DD8DA00432F38 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7FE16C0170DD8DA00432F38 /* Foundation.framework */; };
 		C7FE16C3170DD8DA00432F38 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7FE16C2170DD8DA00432F38 /* CoreGraphics.framework */; };
@@ -31,8 +33,10 @@
 		C771C2CE170F3908003E661A /* Symbols_Play_32xLG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Symbols_Play_32xLG.png; path = MyStatusPusher/Images/Symbols_Play_32xLG.png; sourceTree = "<group>"; };
 		C771C2D2170F3FE4003E661A /* MSPSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSPSettingViewController.h; path = MyStatusPusher/Pusher/MSPSettingViewController.h; sourceTree = "<group>"; };
 		C771C2D3170F3FE4003E661A /* MSPSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MSPSettingViewController.m; path = MyStatusPusher/Pusher/MSPSettingViewController.m; sourceTree = "<group>"; };
-		C771C2D5170FD97E003E661A /* MSPPusherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSPPusherViewController.h; path = MyStatusPusher/Pusher/MSPPusherViewController.h; sourceTree = "<group>"; };
-		C771C2D6170FD97E003E661A /* MSPPusherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MSPPusherViewController.m; path = MyStatusPusher/Pusher/MSPPusherViewController.m; sourceTree = "<group>"; };
+		C78878C6171086EB0019DEC3 /* MSPPusherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MSPPusherViewController.h; path = MyStatusPusher/Pusher/MSPPusherViewController.h; sourceTree = "<group>"; };
+		C78878C7171086EB0019DEC3 /* MSPPusherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MSPPusherViewController.m; path = MyStatusPusher/Pusher/MSPPusherViewController.m; sourceTree = "<group>"; };
+		C78878C9171088230019DEC3 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		C78878CB1710882C0019DEC3 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		C7FE16BA170DD8DA00432F38 /* MyStatusPusher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyStatusPusher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7FE16BE170DD8DA00432F38 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C7FE16C0170DD8DA00432F38 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -55,6 +59,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C78878CC1710882C0019DEC3 /* CoreLocation.framework in Frameworks */,
+				C78878CA171088230019DEC3 /* MapKit.framework in Frameworks */,
 				C7FE16BF170DD8DA00432F38 /* UIKit.framework in Frameworks */,
 				C7FE16C1170DD8DA00432F38 /* Foundation.framework in Frameworks */,
 				C7FE16C3170DD8DA00432F38 /* CoreGraphics.framework in Frameworks */,
@@ -77,8 +83,10 @@
 		C7FE16AF170DD8DA00432F38 = {
 			isa = PBXGroup;
 			children = (
-				C771C2D5170FD97E003E661A /* MSPPusherViewController.h */,
-				C771C2D6170FD97E003E661A /* MSPPusherViewController.m */,
+				C78878CB1710882C0019DEC3 /* CoreLocation.framework */,
+				C78878C9171088230019DEC3 /* MapKit.framework */,
+				C78878C6171086EB0019DEC3 /* MSPPusherViewController.h */,
+				C78878C7171086EB0019DEC3 /* MSPPusherViewController.m */,
 				C771C2D2170F3FE4003E661A /* MSPSettingViewController.h */,
 				C771C2D3170F3FE4003E661A /* MSPSettingViewController.m */,
 				C771C2D1170F3912003E661A /* Images */,
@@ -206,7 +214,7 @@
 				C7FE16D1170DD8DB00432F38 /* MSPAppDelegate.m in Sources */,
 				C7FE16DA170DD8DB00432F38 /* MyStatusPusher.xcdatamodeld in Sources */,
 				C771C2D4170F3FE4003E661A /* MSPSettingViewController.m in Sources */,
-				C771C2D7170FD97E003E661A /* MSPPusherViewController.m in Sources */,
+				C78878C8171086EB0019DEC3 /* MSPPusherViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
