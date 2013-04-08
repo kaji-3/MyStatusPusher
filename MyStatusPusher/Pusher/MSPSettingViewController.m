@@ -15,6 +15,7 @@
 @implementation MSPSettingViewController
 
 @synthesize userSettings;
+@synthesize myTableView;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -28,17 +29,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    //TODO load from data
-    userSettings = [NSMutableDictionary dictionary];
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];  // 取得
+    NSString *Put_Dest_Url = [ud stringForKey:@"Put_Dest_Url"];
     
-    //FIXIT created dummy data
-    [userSettings setObject:@"青森市" forKey:@"AOMORI"];
-    [userSettings setObject:@"盛岡市" forKey:@"IWATE"];
-    [userSettings setObject:@"仙台市" forKey:@"MIYAGI"];
-    [userSettings setObject:@"秋田市" forKey:@"AKITA"];
-    [userSettings setObject:@"山形市" forKey:@"YAMAGATA"];
-    [userSettings setObject:@"福島市" forKey:@"FUKUSHIMA"];
+    // 画面表示項目の作成
+    userSettings = [NSMutableDictionary dictionary];
+    [userSettings setObject:Put_Dest_Url forKey:@"Put_Dest_Url"];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,14 +47,17 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //TODO 項目数増加に伴い項目カテゴリの追加を要検討
-    return 1;
+    return [userSettings count];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return @"送信先URL";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //TODO 項目数増加に伴い項目カテゴリ発生時は、動的な物に変更する
-    return [userSettings count];
+    // 1カテゴリ、1項目
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -66,10 +66,18 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
-    cell.textLabel.text = [userSettings objectForKey:@"IWATE"];
+    //cell.detailTextLabel.text = @"送信先URL";
+    cell.textLabel.text = [userSettings objectForKey:@"Put_Dest_Url"];
     
     return cell;
 }
+
+- (IBAction)saveButton_Touched:(id)sender {
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];  // 取得
+    [ud setObject:@"http://www.kaji-3.com" forKey:@"Put_Dest_Url"];
+    [ud synchronize];
+}
+
 
 /*
 // Override to support conditional editing of the table view.

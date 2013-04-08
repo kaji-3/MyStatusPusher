@@ -11,6 +11,8 @@
 @interface MSPSettingViewController : UITableViewController
 
 // 設定項目一覧
+@property (strong, nonatomic) IBOutlet UITableView *myTableView;
+@property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (strong) NSMutableDictionary *userSettings;
 
 @end

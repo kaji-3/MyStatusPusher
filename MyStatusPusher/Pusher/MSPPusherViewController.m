@@ -53,6 +53,8 @@
     MKMapView *mapView = (MKMapView*) self.view;
     [mapView setRegion:region animated:true];
     
+    // 非同期通信で特定サーバ
+    
 }
 
 - (void)didReceiveMemoryWarning
