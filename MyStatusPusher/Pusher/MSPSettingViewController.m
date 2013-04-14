@@ -17,6 +17,8 @@
 @synthesize userSettings;
 @synthesize myTableView;
 
+NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -32,13 +34,11 @@
     
     // 設定項目の取得
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSString *Put_Dest_Url = [ud stringForKey:@"Put_Dest_Url"];
+    NSString *Put_Dest_Url = [ud stringForKey:SETTING_KEY_OF_POST_DEST_URL];
     
     // 画面項目への設定
     userSettings = [NSMutableDictionary dictionary];
-    [userSettings setObject:Put_Dest_Url forKey:@"Put_Dest_Url"];
-    [userSettings setObject:@"送信記録なし" forKey:@"Send_Result"];
-    
+    [userSettings setObject:Put_Dest_Url forKey:SETTING_KEY_OF_POST_DEST_URL];
 }
 
 - (void)didReceiveMemoryWarning
@@ -60,9 +60,6 @@
         case 0:
             return @"送信先URL";
             break;
-        case 1: 
-            return @"送信ログ";
-            break;
     }
     return nil;
 }
@@ -78,21 +75,18 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    // Configure the cell...
     switch(indexPath.section) {
         case 0:
-            cell.textLabel.text = [userSettings objectForKey:@"Put_Dest_Url"];
+            cell.textLabel.text = [userSettings objectForKey:SETTING_KEY_OF_POST_DEST_URL];
             break;
-        case 1:
-            cell.textLabel.text = [userSettings objectForKey:@"Send_Result"];
-            break;
+
     }
     return cell;
 }
 
 - (IBAction)saveButton_Touched:(id)sender {
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];  // 取得
-    [ud setObject:@"http://www.kaji-3.com" forKey:@"Put_Dest_Url"];
+    [ud setObject:@"http://www.kaji-3.com" forKey:SETTING_KEY_OF_POST_DEST_URL];
     [ud synchronize];
 }
 
