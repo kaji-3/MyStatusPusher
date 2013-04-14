@@ -15,4 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *saveButton;
 @property (strong) NSMutableDictionary *userSettings;
 
+// 定数一覧
+extern NSString * const SETTING_KEY_OF_POST_DEST_URL;
 @end

@@ -9,6 +9,7 @@
 #import "MSPPusherViewController.h"
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
+#import "MSPSettingViewController.h"
 
 @interface MSPPusherViewController ()
 
@@ -117,9 +118,12 @@ const int TEXT_VIEW_TAG = 2;
     NSData *data = [NSJSONSerialization dataWithJSONObject:mutableDic options:NSJSONWritingPrettyPrinted error:&err];
     NSString *requestData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+    NSString *Put_Dest_Url = [ud stringForKey:SETTING_KEY_OF_POST_DEST_URL];
+    
     NSMutableURLRequest *request;
     request =
-    [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.kaji-3.com/"]
+    [NSMutableURLRequest requestWithURL:[NSURL URLWithString:Put_Dest_Url]
                             cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     
     //HTTPメソッドは"POST"
