@@ -45,13 +45,18 @@
            fromLocation:(CLLocation *)oldLocation{
     
     //位置変更時の確認
-    //TODO 実装
+    CLLocationCoordinate2D coordinate = newLocation.coordinate;
+    CLLocationCoordinate2D oldCoordinate = oldLocation.coordinate;
+    if (fabs(coordinate.latitude - oldCoordinate.latitude) < FLT_EPSILON
+        && fabs(coordinate.longitude - oldCoordinate.longitude) < FLT_EPSILON) {
+        return;
+    }
     
     // 表示範囲の指定
     MKCoordinateSpan span = MKCoordinateSpanMake(0.005f, 0.005f);
     
     // 更新された位置をマップの中心に設定
-    CLLocationCoordinate2D coordinate = newLocation.coordinate;
+
     MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);
     MKMapView *mapView = (MKMapView*)[self.view viewWithTag:4];
     
@@ -62,16 +67,19 @@
     dispatch_queue_t mainQueue = dispatch_get_main_queue();
     dispatch_async(globalQueue, ^{
         //TODO リクエストIDを作成する
+        NSString* theUUID = [self uuidWithCreated2String];
 
         //メインスレッドで途中結果表示
+        
+        //TODO 送信パラメータを書き込み
         dispatch_async(mainQueue, ^{
             [self appendLog:
-             [NSString stringWithFormat:@"%@ %@",@"送信開始...",[self location2String:newLocation]]];
+             [NSString stringWithFormat:@"%@ %@ %@",@"送信開始...",[self location2String:newLocation], theUUID]];
         });
 
         
         //時間のかかる処理
-        NSString* result = [self postData2Server:newLocation];
+        NSString* result = [self postData2Server:newLocation requestId:theUUID];
                 
         
         //時間のかかる処理
@@ -79,26 +87,31 @@
         
         //メインスレッドで終了処理
         dispatch_async(mainQueue, ^{
-            [self appendLog:
-                [NSString stringWithFormat:@"%@ %@",@"送信完了...",[self location2String:newLocation]]];
+            [self appendLog:[NSString stringWithFormat:@"%@ %@ %@",@"送信完了!", result, theUUID]];
         });
     });
 }
 
 - (NSString*) postData2Server: (CLLocation *)newLocation
+                    requestId:(NSString*) requestID
 {
+    //位置情報から座標の取得
+    CLLocationCoordinate2D coordinate = newLocation.coordinate;
+    
     //送信するパラメータの組み立て
     NSMutableDictionary *mutableDic = [NSMutableDictionary dictionary];
-    [mutableDic setValue:@"2013/04/21" forKey:@"latitude"];
-    [mutableDic setValue:@"10" forKey:@"longitude"];
-    [mutableDic setValue:@"10" forKey:@"timestamp"];
+    [mutableDic setValue:[NSNumber numberWithDouble:coordinate.latitude] forKey:@"latitude"];
+    [mutableDic setValue:[NSNumber numberWithDouble:coordinate.longitude] forKey:@"longitude"];
+    //TODO NSDate のシリアライズ化
+    [mutableDic setValue:[self date2String:newLocation.timestamp] forKey:@"timestamp"];
+    [mutableDic setValue:requestID forKey:@"requestID"];
     
     //Dictionary -> String(JSON)
     NSError *err;
     NSData *data = [NSJSONSerialization dataWithJSONObject:mutableDic options:NSJSONWritingPrettyPrinted error:&err];
     NSString *requestData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSLog(requestData);
-        
+    
     NSMutableURLRequest *request;
     request =
     [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.kaji-3.com/"]
@@ -120,22 +133,18 @@
     NSData *result = [NSURLConnection sendSynchronousRequest:request 
                                            returningResponse:&resp error:&responseErr];
     //結果処理
-    NSString *responseString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
-    NSLog(responseString);
-    
-    return @"OK :-D";
+    NSString *responseString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];    
+    return responseString;
 }
 
 - (NSString*) location2String: (CLLocation *)newLocation
 {
     //位置情報取得時刻
-    NSDateFormatter* form = [[NSDateFormatter alloc] init];
-    [form setDateFormat:@"G yyyy/MM/dd(EEE) K:mm:ss"];
-    NSString* str = [form stringFromDate:[newLocation timestamp]];
+
 
     //取得位置
     CLLocationCoordinate2D coordinate = newLocation.coordinate;
-    return [NSString stringWithFormat:@"%@ 緯度%f 軽度 %f", str, coordinate.latitude, coordinate.longitude];
+    return [NSString stringWithFormat:@"緯度%f 経度 %f", coordinate.latitude, coordinate.longitude];
 }
 
 // UUID作成メソッド
@@ -150,7 +159,9 @@
 // 日付文字列化メソッド
 - (NSString*) date2String:(NSDate*)timestamp
 {
-    //TODO 実装
+    NSDateFormatter* form = [[NSDateFormatter alloc] init];
+    [form setDateFormat:@"G yyyy/MM/dd HH:mm:ss"];
+    return [form stringFromDate:timestamp];
 }
 
 
