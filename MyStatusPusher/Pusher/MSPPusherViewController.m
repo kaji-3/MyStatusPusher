@@ -59,7 +59,6 @@ const int TEXT_VIEW_TAG = 2;
     CLLocationCoordinate2D coordinate = newLocation.coordinate;
     MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);
     MKMapView *mapView = (MKMapView*)[self.view viewWithTag:MAP_VIEW_TAG];
-    
     [mapView setRegion:region animated:true];
     
     // 非同期通信で特定サーバへの送信
@@ -68,8 +67,6 @@ const int TEXT_VIEW_TAG = 2;
     dispatch_async(globalQueue, ^{
         //TODO リクエストIDを作成する
         NSString* requestUUID = [self uuidWithCreated2String];
-
-        //メインスレッドで途中結果表示
         
         //TODO 送信パラメータを書き込み
         dispatch_async(mainQueue, ^{
@@ -80,10 +77,6 @@ const int TEXT_VIEW_TAG = 2;
         
         //時間のかかる処理
         NSString* result = [self postData2Server:newLocation requestId:requestUUID];
-                
-        
-        //時間のかかる処理
-        [NSThread sleepForTimeInterval:0.5];
         
         //メインスレッドで終了処理
         dispatch_async(mainQueue, ^{
@@ -123,7 +116,6 @@ const int TEXT_VIEW_TAG = 2;
     NSError *err;
     NSData *data = [NSJSONSerialization dataWithJSONObject:mutableDic options:NSJSONWritingPrettyPrinted error:&err];
     NSString *requestData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSLog(requestData);
     
     NSMutableURLRequest *request;
     request =
@@ -150,17 +142,14 @@ const int TEXT_VIEW_TAG = 2;
     return responseString;
 }
 
+//CLLocation情報をNSStringに変換
 - (NSString*) location2String: (CLLocation *)newLocation
 {
-    //位置情報取得時刻
-
-
-    //取得位置
     CLLocationCoordinate2D coordinate = newLocation.coordinate;
     return [NSString stringWithFormat:@"緯度%f 経度 %f", coordinate.latitude, coordinate.longitude];
 }
 
-// UUID作成メソッド
+// UUIDオブジェクトを作成、文字列として返す
 - (NSString*) uuidWithCreated2String
 {
     CFUUIDRef uuidObj = CFUUIDCreate(nil);//create a new UUID
@@ -183,8 +172,6 @@ const int TEXT_VIEW_TAG = 2;
     UITextView *textView = (UITextView*)[self.view viewWithTag:TEXT_VIEW_TAG];
     textView.text = [NSString stringWithFormat:@"%@\n%@", log, textView.text];
 }
-
-
 
 - (void)didReceiveMemoryWarning
 {
