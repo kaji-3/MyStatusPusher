@@ -16,6 +16,9 @@
 
 @implementation MSPPusherViewController
 
+const int MAP_VIEW_TAG = 4;
+const int TEXT_VIEW_TAG = 2;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,7 +58,7 @@
     // 更新された位置をマップの中心に設定
     CLLocationCoordinate2D coordinate = newLocation.coordinate;
     MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);
-    MKMapView *mapView = (MKMapView*)[self.view viewWithTag:4];
+    MKMapView *mapView = (MKMapView*)[self.view viewWithTag:MAP_VIEW_TAG];
     
     [mapView setRegion:region animated:true];
     
@@ -177,7 +180,7 @@
 
 - (void)appendLog:(NSString *)log
 {
-    UITextView *textView = (UITextView*)[self.view viewWithTag:2];
+    UITextView *textView = (UITextView*)[self.view viewWithTag:TEXT_VIEW_TAG];
     textView.text = [NSString stringWithFormat:@"%@\n%@", log, textView.text];
 }
 
