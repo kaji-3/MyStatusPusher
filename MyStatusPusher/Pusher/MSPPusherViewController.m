@@ -51,7 +51,6 @@
     CLLocationCoordinate2D coordinate = newLocation.coordinate;
     MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);
     MKMapView *mapView = (MKMapView*)[self.view viewWithTag:4];
-    UITextView *textView = (UITextView*)[self.view viewWithTag:2];
     
     [mapView setRegion:region animated:true];
     
@@ -61,40 +60,27 @@
     dispatch_async(globalQueue, ^{
         
         //時間のかかる処理
-        int count = 0, i;
-        for(i = 0; i < 10000; i++){
-            NSLog(@"count = %d", count);
-            count++;
-        }
+        [NSThread sleepForTimeInterval:0.5];
         
         //メインスレッドで途中結果表示
         dispatch_async(mainQueue, ^{
-            [self appendLog:[self logStringWithCount:count]];
+            [self appendLog:@"送信中..."];
         });
         
         //時間のかかる処理
-        for(i = 0; i < 10000; i++){
-            NSLog(@"count = %d", count);
-            count++;
-        }
+        [NSThread sleepForTimeInterval:0.5];
         
         //メインスレッドで終了処理
         dispatch_async(mainQueue, ^{
-            [self appendLog:[self logStringWithCount:count]];
-            //[_indicatorView stopAnimating];
-            //_startButton.hidden = NO;
+            [self appendLog:@"送信完了！"];
         });
     });
 }
 
-- (NSString *)logStringWithCount:(int)count
-{
-    return [NSString stringWithFormat:@"count is %d", count];
-}
-
 - (void)appendLog:(NSString *)log
 {
-    //_logView.text = [NSString stringWithFormat:@"%@\n%@", _logView.text, log];
+    UITextView *textView = (UITextView*)[self.view viewWithTag:2];
+    textView.text = [NSString stringWithFormat:@"%@\n%@", log, textView.text];
 }
 
 
