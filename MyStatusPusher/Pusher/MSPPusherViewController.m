@@ -45,10 +45,7 @@
            fromLocation:(CLLocation *)oldLocation{
     
     //位置変更時の確認
-    CLLocationCoordinate2D coordinate = newLocation.coordinate;
-    CLLocationCoordinate2D oldCoordinate = oldLocation.coordinate;
-    if (fabs(coordinate.latitude - oldCoordinate.latitude) < FLT_EPSILON
-        && fabs(coordinate.longitude - oldCoordinate.longitude) < FLT_EPSILON) {
+    if ([self isSameLocation:newLocation compareTo:oldLocation]) {
         return;
     }
     
@@ -56,7 +53,7 @@
     MKCoordinateSpan span = MKCoordinateSpanMake(0.005f, 0.005f);
     
     // 更新された位置をマップの中心に設定
-
+    CLLocationCoordinate2D coordinate = newLocation.coordinate;
     MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);
     MKMapView *mapView = (MKMapView*)[self.view viewWithTag:4];
     
@@ -67,19 +64,19 @@
     dispatch_queue_t mainQueue = dispatch_get_main_queue();
     dispatch_async(globalQueue, ^{
         //TODO リクエストIDを作成する
-        NSString* theUUID = [self uuidWithCreated2String];
+        NSString* requestUUID = [self uuidWithCreated2String];
 
         //メインスレッドで途中結果表示
         
         //TODO 送信パラメータを書き込み
         dispatch_async(mainQueue, ^{
             [self appendLog:
-             [NSString stringWithFormat:@"%@ %@ %@",@"送信開始...",[self location2String:newLocation], theUUID]];
+             [NSString stringWithFormat:@"%@ %@ %@",@"送信開始...",[self location2String:newLocation], requestUUID]];
         });
 
         
         //時間のかかる処理
-        NSString* result = [self postData2Server:newLocation requestId:theUUID];
+        NSString* result = [self postData2Server:newLocation requestId:requestUUID];
                 
         
         //時間のかかる処理
@@ -87,10 +84,23 @@
         
         //メインスレッドで終了処理
         dispatch_async(mainQueue, ^{
-            [self appendLog:[NSString stringWithFormat:@"%@ %@ %@",@"送信完了!", result, theUUID]];
+            [self appendLog:[NSString stringWithFormat:@"%@ %@ %@",@"送信完了!", result, requestUUID]];
         });
     });
 }
+
+// ２つの場所を比較する
+- (BOOL) isSameLocation: (CLLocation *) newLocation compareTo:(CLLocation *) oldLocation
+{
+    
+    CLLocationCoordinate2D coordinate = newLocation.coordinate;
+    CLLocationCoordinate2D oldCoordinate = oldLocation.coordinate;
+
+    return (fabs(coordinate.latitude - oldCoordinate.latitude) < FLT_EPSILON
+            && fabs(coordinate.longitude - oldCoordinate.longitude) < FLT_EPSILON);
+}
+
+
 
 - (NSString*) postData2Server: (CLLocation *)newLocation
                     requestId:(NSString*) requestID
