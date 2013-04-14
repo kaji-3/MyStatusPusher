@@ -44,6 +44,9 @@
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation{
     
+    //位置変更時の確認
+    //TODO 実装
+    
     // 表示範囲の指定
     MKCoordinateSpan span = MKCoordinateSpanMake(0.005f, 0.005f);
     
@@ -54,44 +57,100 @@
     
     [mapView setRegion:region animated:true];
     
-    // 非同期通信で特定サーバ
+    // 非同期通信で特定サーバへの送信
     dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_queue_t mainQueue = dispatch_get_main_queue();
     dispatch_async(globalQueue, ^{
-        CLLocationCoordinate2D coordinate = newLocation.coordinate;
-        
-        //時間のかかる処理
-        [NSThread sleepForTimeInterval:0.5];
-        
+        //TODO リクエストIDを作成する
+
         //メインスレッドで途中結果表示
         dispatch_async(mainQueue, ^{
-            [self appendLog:[NSString stringWithFormat:@"%@ %@",@"送信中...",[self location2String:newLocation]]];
+            [self appendLog:
+             [NSString stringWithFormat:@"%@ %@",@"送信開始...",[self location2String:newLocation]]];
         });
+
+        
+        //時間のかかる処理
+        NSString* result = [self postData2Server:newLocation];
+                
         
         //時間のかかる処理
         [NSThread sleepForTimeInterval:0.5];
         
         //メインスレッドで終了処理
         dispatch_async(mainQueue, ^{
-            [self appendLog:[NSString stringWithFormat:@"%@ %@",@"送信完了...",[self location2String:newLocation]]];
+            [self appendLog:
+                [NSString stringWithFormat:@"%@ %@",@"送信完了...",[self location2String:newLocation]]];
         });
     });
 }
 
+- (NSString*) postData2Server: (CLLocation *)newLocation
+{
+    //送信するパラメータの組み立て
+    NSMutableDictionary *mutableDic = [NSMutableDictionary dictionary];
+    [mutableDic setValue:@"2013/04/21" forKey:@"latitude"];
+    [mutableDic setValue:@"10" forKey:@"longitude"];
+    [mutableDic setValue:@"10" forKey:@"timestamp"];
+    
+    //Dictionary -> String(JSON)
+    NSError *err;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:mutableDic options:NSJSONWritingPrettyPrinted error:&err];
+    NSString *requestData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(requestData);
+        
+    NSMutableURLRequest *request;
+    request =
+    [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.kaji-3.com/"]
+                            cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
+    
+    //HTTPメソッドは"POST"
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:[NSString stringWithFormat:@"%d",
+                       [requestData length]] forHTTPHeaderField:@"Content-Length"];
+    [request setHTTPBody: data];
+    
+    //レスポンス
+    NSURLResponse *resp;
+    NSError *responseErr;
+    
+    //HTTPリクエスト送信
+    NSData *result = [NSURLConnection sendSynchronousRequest:request 
+                                           returningResponse:&resp error:&responseErr];
+    //結果処理
+    NSString *responseString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];
+    NSLog(responseString);
+    
+    return @"OK :-D";
+}
+
 - (NSString*) location2String: (CLLocation *)newLocation
 {
-    CLLocationCoordinate2D coordinate = newLocation.coordinate;
-    // NSDateFormatterのインスタンス生成
+    //位置情報取得時刻
     NSDateFormatter* form = [[NSDateFormatter alloc] init];
-    
-    // NSDateFormatterに書式指定を行う
     [form setDateFormat:@"G yyyy/MM/dd(EEE) K:mm:ss"];
-    
-    // 書式指定に従って文字出力
     NSString* str = [form stringFromDate:[newLocation timestamp]];
-    
+
+    //取得位置
+    CLLocationCoordinate2D coordinate = newLocation.coordinate;
     return [NSString stringWithFormat:@"%@ 緯度%f 軽度 %f", str, coordinate.latitude, coordinate.longitude];
-    //return @"hoge";
+}
+
+// UUID作成メソッド
+- (NSString*) uuidWithCreated2String
+{
+    CFUUIDRef uuidObj = CFUUIDCreate(nil);//create a new UUID
+    CFStringRef string = CFUUIDCreateString(NULL, uuidObj);
+    CFRelease(uuidObj);
+    return (__bridge_transfer NSString *)string;
+}
+
+// 日付文字列化メソッド
+- (NSString*) date2String:(NSDate*)timestamp
+{
+    //TODO 実装
 }
 
 
