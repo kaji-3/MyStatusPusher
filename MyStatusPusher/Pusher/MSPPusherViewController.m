@@ -58,13 +58,14 @@
     dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_queue_t mainQueue = dispatch_get_main_queue();
     dispatch_async(globalQueue, ^{
+        CLLocationCoordinate2D coordinate = newLocation.coordinate;
         
         //時間のかかる処理
         [NSThread sleepForTimeInterval:0.5];
         
         //メインスレッドで途中結果表示
         dispatch_async(mainQueue, ^{
-            [self appendLog:@"送信中..."];
+            [self appendLog:[NSString stringWithFormat:@"%@ %@",@"送信中...",[self location2String:newLocation]]];
         });
         
         //時間のかかる処理
@@ -72,10 +73,27 @@
         
         //メインスレッドで終了処理
         dispatch_async(mainQueue, ^{
-            [self appendLog:@"送信完了！"];
+            [self appendLog:[NSString stringWithFormat:@"%@ %@",@"送信完了...",[self location2String:newLocation]]];
         });
     });
 }
+
+- (NSString*) location2String: (CLLocation *)newLocation
+{
+    CLLocationCoordinate2D coordinate = newLocation.coordinate;
+    // NSDateFormatterのインスタンス生成
+    NSDateFormatter* form = [[NSDateFormatter alloc] init];
+    
+    // NSDateFormatterに書式指定を行う
+    [form setDateFormat:@"G yyyy/MM/dd(EEE) K:mm:ss"];
+    
+    // 書式指定に従って文字出力
+    NSString* str = [form stringFromDate:[newLocation timestamp]];
+    
+    return [NSString stringWithFormat:@"%@ 緯度%f 軽度 %f", str, coordinate.latitude, coordinate.longitude];
+    //return @"hoge";
+}
+
 
 - (void)appendLog:(NSString *)log
 {
