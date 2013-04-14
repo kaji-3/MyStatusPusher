@@ -36,6 +36,10 @@ NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     NSString *Put_Dest_Url = [ud stringForKey:SETTING_KEY_OF_POST_DEST_URL];
     
+    if (Put_Dest_Url == nil) {
+        Put_Dest_Url = @"http://www.kaji-3.com";
+    }
+    
     // 画面項目への設定
     userSettings = [NSMutableDictionary dictionary];
     [userSettings setObject:Put_Dest_Url forKey:SETTING_KEY_OF_POST_DEST_URL];
@@ -84,63 +88,37 @@ NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
     return cell;
 }
 
-- (IBAction)saveButton_Touched:(id)sender {
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];  // 取得
-    [ud setObject:@"http://www.kaji-3.com" forKey:SETTING_KEY_OF_POST_DEST_URL];
-    [ud synchronize];
-}
-
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    UIAlertView *message =
+    [[UIAlertView alloc] initWithTitle:@"" message:@"変更値を入力してください"
+                              delegate:self cancelButtonTitle:@"キャンセル" otherButtonTitles:@"OK", nil];
+    [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    
+    UITextField *textField = [message textFieldAtIndex:0];
+    //TODO 表示値と設定値で何を参考にするか確定すること
+    [textField setText:[userSettings objectForKey:SETTING_KEY_OF_POST_DEST_URL]];
+    [message show];
+    
 }
+
+// AlertView delegete
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (buttonIndex==1) {
+        NSString* chengedValue = [[alertView textFieldAtIndex:0] text];
+        NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+        //TODO 表示値と設定値で何を参考にするか確定すること
+        [ud setObject:chengedValue forKey:SETTING_KEY_OF_POST_DEST_URL];
+        [ud synchronize];
+    }
+    
+
+}
+
+
 
 @end
