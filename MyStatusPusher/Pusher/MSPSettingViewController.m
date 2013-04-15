@@ -14,7 +14,6 @@
 
 @implementation MSPSettingViewController
 
-@synthesize userSettings;
 @synthesize myTableView;
 
 NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
@@ -30,19 +29,7 @@ NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    
-    // 設定項目の取得
-    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-    NSString *Put_Dest_Url = [ud stringForKey:SETTING_KEY_OF_POST_DEST_URL];
-    
-    if (Put_Dest_Url == nil) {
-        Put_Dest_Url = @"http://www.kaji-3.com";
-    }
-    
-    // 画面項目への設定
-    userSettings = [NSMutableDictionary dictionary];
-    [userSettings setObject:Put_Dest_Url forKey:SETTING_KEY_OF_POST_DEST_URL];
+    [super viewDidLoad];    
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,7 +42,8 @@ NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
 // セクション数の提供
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [userSettings count];
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    return  [[[NSUserDefaults standardUserDefaults] persistentDomainForName:appDomain] count];;
 }
 
 // セクション名の提供
@@ -81,7 +69,9 @@ NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
     
     switch(indexPath.section) {
         case 0:
-            cell.textLabel.text = [userSettings objectForKey:SETTING_KEY_OF_POST_DEST_URL];
+        {
+            cell.textLabel.text = [[NSUserDefaults standardUserDefaults] stringForKey:SETTING_KEY_OF_POST_DEST_URL];
+        }
             break;
 
     }
@@ -99,8 +89,7 @@ NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
     [message setAlertViewStyle:UIAlertViewStylePlainTextInput];
     
     UITextField *textField = [message textFieldAtIndex:0];
-    //TODO 表示値と設定値で何を参考にするか確定すること
-    [textField setText:[userSettings objectForKey:SETTING_KEY_OF_POST_DEST_URL]];
+    [textField setText:[[NSUserDefaults standardUserDefaults] stringForKey:SETTING_KEY_OF_POST_DEST_URL]];
     [message show];
     
 }
@@ -109,14 +98,11 @@ NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
     if (buttonIndex==1) {
-        NSString* chengedValue = [[alertView textFieldAtIndex:0] text];
+        NSString* changedValue = [[alertView textFieldAtIndex:0] text];
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
-        //TODO 表示値と設定値で何を参考にするか確定すること
-        [ud setObject:chengedValue forKey:SETTING_KEY_OF_POST_DEST_URL];
+        [ud setObject:changedValue forKey:SETTING_KEY_OF_POST_DEST_URL];
         [ud synchronize];
     }
-    
-
 }
 
 

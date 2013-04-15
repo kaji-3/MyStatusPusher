@@ -7,6 +7,7 @@
 //
 
 #import "MSPAppDelegate.h"
+#import "MSPSettingViewController.h"
 
 @implementation MSPAppDelegate
 
@@ -16,6 +17,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // 初期設定値保存
+    NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];  // 取得
+    NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
+    [ud setObject:@"http://www.kaji-3.com" forKey:SETTING_KEY_OF_POST_DEST_URL];
+    [ud registerDefaults:defaults];
+    
     return YES;
 }
 
