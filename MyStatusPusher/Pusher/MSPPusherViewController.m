@@ -47,9 +47,12 @@ const int TEXT_VIEW_TAG = 2;
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation{
+    [self appendLog:
+     [NSString stringWithFormat:@"%@ %@",@"位置情報取得",[self date2String:[NSDate date]]]];
     
     //位置変更時の確認
-    if ([self isSameLocation:newLocation compareTo:oldLocation]) {
+    if ([self isNear:newLocation compareTo:oldLocation]) {
+
         return;
     }
     
@@ -87,14 +90,12 @@ const int TEXT_VIEW_TAG = 2;
 }
 
 // ２つの場所を比較する
-- (BOOL) isSameLocation: (CLLocation *) newLocation compareTo:(CLLocation *) oldLocation
+- (BOOL) isNear: (CLLocation *) newLocation compareTo:(CLLocation *) oldLocation
 {
-    
-    CLLocationCoordinate2D coordinate = newLocation.coordinate;
-    CLLocationCoordinate2D oldCoordinate = oldLocation.coordinate;
 
-    return (fabs(coordinate.latitude - oldCoordinate.latitude) < FLT_EPSILON
-            && fabs(coordinate.longitude - oldCoordinate.longitude) < FLT_EPSILON);
+    
+    CLLocationDistance kilometers =    [newLocation distanceFromLocation:oldLocation];
+    return kilometers > 0.5;
 }
 
 
