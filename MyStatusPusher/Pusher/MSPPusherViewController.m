@@ -20,6 +20,8 @@
 const int MAP_VIEW_TAG = 4;
 const int TEXT_VIEW_TAG = 2;
 
+CLLocation *nowLocation;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -51,10 +53,13 @@ const int TEXT_VIEW_TAG = 2;
      [NSString stringWithFormat:@"%@ %@",@"位置情報取得",[self date2String:[NSDate date]]]];
     
     //位置変更時の確認
-    if ([self isNear:newLocation compareTo:oldLocation]) {
+    if ([self isNear:newLocation compareTo:nowLocation]) {
 
         return;
     }
+    
+    // 現在位置の更新
+    nowLocation = newLocation;
     
     // 表示範囲の指定
     MKCoordinateSpan span = MKCoordinateSpanMake(0.005f, 0.005f);
@@ -92,10 +97,14 @@ const int TEXT_VIEW_TAG = 2;
 // ２つの場所を比較する
 - (BOOL) isNear: (CLLocation *) newLocation compareTo:(CLLocation *) oldLocation
 {
-
-    
-    CLLocationDistance kilometers =    [newLocation distanceFromLocation:oldLocation];
-    return kilometers > 0.5;
+    CLLocationDistance meters = [newLocation distanceFromLocation:oldLocation];
+    if (meters > 5 || oldLocation == nil) {
+        [self appendLog:
+         [NSString stringWithFormat:@"%@ %f %@",@"距離計算",meters,@"m"]];
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 
@@ -144,7 +153,7 @@ const int TEXT_VIEW_TAG = 2;
                                            returningResponse:&resp error:&responseErr];
     //結果処理
     NSString *responseString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];    
-    return responseString;
+    return  [responseErr localizedDescription];;
 }
 
 //CLLocation情報をNSStringに変換
