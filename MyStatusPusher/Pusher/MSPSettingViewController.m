@@ -101,6 +101,7 @@ NSString * const SETTING_KEY_OF_POST_DEST_URL = @"Put_Dest_Url";
         NSString* changedValue = [[alertView textFieldAtIndex:0] text];
         NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
         [ud setObject:changedValue forKey:SETTING_KEY_OF_POST_DEST_URL];
+        [myTableView reloadData];
         [ud synchronize];
     }
 }

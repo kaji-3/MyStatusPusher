@@ -8,6 +8,7 @@
 
 #import "MSPPusherViewController.h"
 #import <CoreLocation/CoreLocation.h>
+#import <CoreMotion/CoreMotion.h>
 #import <MapKit/MapKit.h>
 #import "MSPSettingViewController.h"
 
@@ -21,6 +22,7 @@ const int MAP_VIEW_TAG = 4;
 const int TEXT_VIEW_TAG = 2;
 
 CLLocation *nowLocation;
+CMMotionManager *_motionManager;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -39,22 +41,34 @@ CLLocation *nowLocation;
     // 位置情報の取得
     _locationManager = [[CLLocationManager alloc] init];
     _locationManager.delegate = self;
-    
     if ([CLLocationManager locationServicesEnabled]) {
         [_locationManager startUpdatingLocation];
     }
+    
+    // 加速度データ・ジャイロの更新間隔を1秒ごとに設定
+    _motionManager = [[CMMotionManager alloc] init];
+    _motionManager.accelerometerUpdateInterval = 1;
+    _motionManager.gyroUpdateInterval =1;
+    if (_motionManager.accelerometerAvailable)
+    {
+       [_motionManager startAccelerometerUpdates];
+
+    }
+    if (_motionManager.gyroAvailable)
+    {
+        [_motionManager startGyroUpdates];
+
+    }
+
 }
 
 // 位置情報更新時に呼ばれるハンドラ
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation{
-    [self appendLog:
-     [NSString stringWithFormat:@"%@ %@",@"位置情報取得",[self date2String:[NSDate date]]]];
     
     //位置変更時の確認
     if ([self isNear:newLocation compareTo:nowLocation]) {
-
         return;
     }
     
@@ -64,33 +78,33 @@ CLLocation *nowLocation;
     // 表示範囲の指定
     MKCoordinateSpan span = MKCoordinateSpanMake(0.005f, 0.005f);
     
-    // 更新された位置をマップの中心に設定
-    CLLocationCoordinate2D coordinate = newLocation.coordinate;
-    MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);
-    MKMapView *mapView = (MKMapView*)[self.view viewWithTag:MAP_VIEW_TAG];
-    [mapView setRegion:region animated:true];
-    
     // 非同期通信で特定サーバへの送信
     dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_queue_t mainQueue = dispatch_get_main_queue();
     dispatch_async(globalQueue, ^{
-        //TODO リクエストIDを作成する
+        //リクエストIDを作成する
         NSString* requestUUID = [self uuidWithCreated2String];
-        
-        //TODO 送信パラメータを書き込み
-        dispatch_async(mainQueue, ^{
-            [self appendLog:
-             [NSString stringWithFormat:@"%@ %@ %@",@"送信開始...",[self location2String:newLocation], requestUUID]];
-        });
-
         
         //時間のかかる処理
         NSString* result = [self postData2Server:newLocation requestId:requestUUID];
         
-        //メインスレッドで終了処理
-        dispatch_async(mainQueue, ^{
-            [self appendLog:[NSString stringWithFormat:@"%@ %@ %@",@"送信完了!", result, requestUUID]];
-        });
+        UIApplicationState state = [[UIApplication sharedApplication] applicationState];
+        if (state == UIApplicationStateActive)
+        {
+            // アプリケーションがActiveな時だけ画面更新
+            
+            // 更新された位置をマップの中心に設定
+            CLLocationCoordinate2D coordinate = newLocation.coordinate;
+            MKCoordinateRegion region = MKCoordinateRegionMake(coordinate, span);
+            MKMapView *mapView = (MKMapView*)[self.view viewWithTag:MAP_VIEW_TAG];
+            [mapView setRegion:region animated:true];
+            
+            //メインスレッドで終了処理
+            dispatch_async(mainQueue, ^{
+                [self appendLog:[NSString stringWithFormat:@"%@ %@ %@",@"送信完了!", result, requestUUID]];
+            });
+        }
+
     });
 }
 
@@ -99,19 +113,19 @@ CLLocation *nowLocation;
 {
     CLLocationDistance meters = [newLocation distanceFromLocation:oldLocation];
     if (meters > 5 || oldLocation == nil) {
-        [self appendLog:
-         [NSString stringWithFormat:@"%@ %f %@",@"距離計算",meters,@"m"]];
         return NO;
     } else {
         return YES;
     }
 }
 
-
-
 - (NSString*) postData2Server: (CLLocation *)newLocation
                     requestId:(NSString*) requestID
 {
+
+    // 加速度情報の取得
+    //CMAccelerometerData *accelermeterData = _motionManager.accelerometerData;
+
     //位置情報から座標の取得
     CLLocationCoordinate2D coordinate = newLocation.coordinate;
     
@@ -153,7 +167,7 @@ CLLocation *nowLocation;
                                            returningResponse:&resp error:&responseErr];
     //結果処理
     NSString *responseString = [[NSString alloc] initWithData:result encoding:NSUTF8StringEncoding];    
-    return  [responseErr localizedDescription];;
+    return  responseString;
 }
 
 //CLLocation情報をNSStringに変換
@@ -184,7 +198,8 @@ CLLocation *nowLocation;
 - (void)appendLog:(NSString *)log
 {
     UITextView *textView = (UITextView*)[self.view viewWithTag:TEXT_VIEW_TAG];
-    textView.text = [NSString stringWithFormat:@"%@\n%@", log, textView.text];
+    //textView.text = [NSString stringWithFormat:@"%@\n%@", log, textView.text];
+    textView.text = log;
 }
 
 - (void)didReceiveMemoryWarning

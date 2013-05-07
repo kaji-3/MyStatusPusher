@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C746EDFF1739709B004CA80D /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C746EDFE1739709B004CA80D /* CoreMotion.framework */; };
 		C771C2CC170DDACF003E661A /* iPhoneStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C771C2CB170DDACF003E661A /* iPhoneStoryboard.storyboard */; };
 		C771C2CF170F3908003E661A /* gear_32xLG.png in Resources */ = {isa = PBXBuildFile; fileRef = C771C2CD170F3908003E661A /* gear_32xLG.png */; };
 		C771C2D0170F3908003E661A /* Symbols_Play_32xLG.png in Resources */ = {isa = PBXBuildFile; fileRef = C771C2CE170F3908003E661A /* Symbols_Play_32xLG.png */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C746EDFE1739709B004CA80D /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		C771C2CB170DDACF003E661A /* iPhoneStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhoneStoryboard.storyboard; sourceTree = "<group>"; };
 		C771C2CD170F3908003E661A /* gear_32xLG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = gear_32xLG.png; path = MyStatusPusher/Images/gear_32xLG.png; sourceTree = "<group>"; };
 		C771C2CE170F3908003E661A /* Symbols_Play_32xLG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Symbols_Play_32xLG.png; path = MyStatusPusher/Images/Symbols_Play_32xLG.png; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C746EDFF1739709B004CA80D /* CoreMotion.framework in Frameworks */,
 				C78878CC1710882C0019DEC3 /* CoreLocation.framework in Frameworks */,
 				C78878CA171088230019DEC3 /* MapKit.framework in Frameworks */,
 				C7FE16BF170DD8DA00432F38 /* UIKit.framework in Frameworks */,
@@ -83,6 +86,7 @@
 		C7FE16AF170DD8DA00432F38 = {
 			isa = PBXGroup;
 			children = (
+				C746EDFE1739709B004CA80D /* CoreMotion.framework */,
 				C78878CB1710882C0019DEC3 /* CoreLocation.framework */,
 				C78878C9171088230019DEC3 /* MapKit.framework */,
 				C78878C6171086EB0019DEC3 /* MSPPusherViewController.h */,

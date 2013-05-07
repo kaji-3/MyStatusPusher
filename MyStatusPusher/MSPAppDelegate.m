@@ -20,7 +20,7 @@
     // 初期設定値保存
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];  // 取得
     NSMutableDictionary *defaults = [NSMutableDictionary dictionary];
-    [ud setObject:@"http://www.kaji-3.com" forKey:SETTING_KEY_OF_POST_DEST_URL];
+    [ud setObject:@"http://kaji3-mystatus.cloudapp.net/api/StatusReciver" forKey:SETTING_KEY_OF_POST_DEST_URL];
     [ud registerDefaults:defaults];
     
     return YES;
